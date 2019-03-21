@@ -1,0 +1,68 @@
+package com.experiment.controller;
+
+
+import com.experiment.Utils.JWTUtil;
+import com.experiment.Utils.Response;
+import com.experiment.entity.Userinfo;
+import com.experiment.entity.WorkLoad;
+import com.experiment.service.WorkLoadService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.experiment.Utils.BaseController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-25
+ */
+
+
+@Api(value = "工作量操作api",description = "工作量操作api")
+@RestController
+@RequestMapping("/workLoad")
+public class WorkLoadController extends BaseController {
+
+    @Autowired
+    private WorkLoadService workLoadService;
+
+
+    @ApiOperation(value = "教师提交工作量",notes = "教师提交工作量,参数不要带上userId，由后台操作")
+    @ApiImplicitParam(name = "workload",value = "workload",paramType = "body")
+    @RequiresRoles("教师")
+    @PostMapping("/add")
+    public Response add(@RequestBody WorkLoad workLoad, HttpServletRequest request){
+            return Response.success();
+    }
+
+
+
+    @ApiOperation(value = "管理员查询所有工作量，参数为年份，不传默认查出所有年份的工作量")
+    @ApiImplicitParam(name ="param" ,value = "param",paramType = "query")
+    @RequiresRoles("管理员")
+    @GetMapping("/list")
+    public Response list(@RequestParam("param")String param){
+        if(param==null)
+            param="";
+        return Response.success(workLoadService.list(param));
+    }
+
+    @ApiOperation(value = "教师查询自己历年的工作年")
+    @ApiImplicitParam(name = "token" ,value = "token",required = true,paramType = "header")
+    @RequiresRoles("教师")
+    @GetMapping("/search")
+    public Response search(HttpServletRequest request){
+        return Response.success(workLoadService.searchByUserId(JWTUtil.getUsername(JWTUtil.getToken(request))));
+    }
+}
+

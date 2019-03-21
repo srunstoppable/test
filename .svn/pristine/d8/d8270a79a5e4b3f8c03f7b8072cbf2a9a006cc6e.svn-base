@@ -1,0 +1,108 @@
+package com.experiment.controller;
+
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.experiment.Utils.Compute;
+import com.experiment.Utils.JWTUtil;
+import com.experiment.Utils.Response;
+import com.experiment.entity.WorkLoad;
+import com.experiment.service.FormulaService;
+import com.experiment.service.WorkLoadService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.experiment.Utils.BaseController;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
+import java.util.Map;
+
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-25
+ */
+
+
+@Api(value = "工作量操作api",description = "工作量操作api")
+@RestController
+@RequestMapping("/workLoad")
+public class WorkLoadController extends BaseController {
+
+    @Autowired
+    private WorkLoadService workLoadService;
+
+
+    @Autowired
+    private FormulaService formulaService;
+
+    @ApiOperation(value = "教师提交工作量",notes = "教师提交工作量,参数不要带上userId，由后台操作")
+    @ApiImplicitParam(name = "Authorization", value = "Authorization", required = true, paramType = "header")
+    @RequiresRoles("教师")
+    @PostMapping("/add")
+        public Response add(@RequestBody JSONObject jsonObject,HttpServletRequest request){
+            WorkLoad workLoad=new WorkLoad();
+            JSONArray array=jsonObject.getJSONArray("list");
+            String userid=JWTUtil.getUsername(JWTUtil.getToken(request));
+            double count = 0;
+            String teams= null;
+            for(int i=0 ; i<array.size(); i++){
+                JSONObject object=array.getJSONObject(i);
+                Map map=(Map)object;
+                String formula=formulaService.search((int)map.get("FormulaId")).getFormulaValue();
+                teams=(String)map.get("teams");
+                StringBuffer stringBuffer=new StringBuffer();
+                char[]c = formula.toCharArray();
+                for(char child : c){
+                    if(child>=97 && child<=122) {
+                        Iterator iterator=map.entrySet().iterator();
+                        while (iterator.hasNext()){
+                            Map.Entry entry=(Map.Entry)iterator.next();
+                            if (entry.getKey().equals(String.valueOf(child)))
+                                stringBuffer.append(entry.getValue());
+                        }
+                    } else {
+                        stringBuffer.append(child);
+                    }
+
+                }
+                    stringBuffer.append("@");
+                    count+=Compute.compute(Compute.change(stringBuffer.toString()));
+            }
+            workLoad.setTeams(teams);
+            workLoad.setUserid(userid);
+            workLoad.setWorkLoadValue(count);
+            workLoadService.add(workLoad);
+            return Response.success();
+    }
+
+
+    @ApiOperation(value = "管理员查询所有工作量，参数为年份，不传默认查出所有年份的工作量",response = WorkLoad.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "param", value = "param", paramType = "query"),
+            @ApiImplicitParam(name = "Authorization", value = "Authorization", required = true, paramType = "header")
+    })
+    @RequiresRoles("管理员")
+    @GetMapping("/list")
+    public Response list(@RequestParam("param")String param){
+        if(param==null)
+            param="";
+        return Response.success(workLoadService.list(param));
+    }
+
+    @ApiOperation(value = "教师查询自己历年的工作量",response = WorkLoad.class)
+    @ApiImplicitParam(name = "Authorization" ,value = "Authorization",required = true,paramType = "header")
+    @RequiresRoles("教师")
+    @GetMapping("/search")
+    public Response search(HttpServletRequest request){
+        return Response.success(workLoadService.searchByUserId(JWTUtil.getUsername(JWTUtil.getToken(request))));
+    }
+}
+

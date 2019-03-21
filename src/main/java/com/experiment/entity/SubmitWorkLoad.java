@@ -1,0 +1,22 @@
+package com.experiment.entity;
+
+import lombok.Data;
+
+/**
+ * @author s r
+ * @date 2018/11/25
+ */
+@Data
+public class SubmitWorkLoad {
+    private int CourseId;
+    private String userId;
+    private String courseName;
+    private String courseType;
+    private String teams;
+    private String formulaName;
+    private String parameterId;
+    private String parameterName;
+    private String parameterSymbol;
+    private String parameterValue;
+    private int formulaId;
+}

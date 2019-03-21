@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="/js/layui-v2.4.3/layui/layui.js"></script>
+    <script src="/js/pub_js/time.js" type="text/javascript" charset="utf-8"></script>
+    <script id="createTime" type="text/html">
+        {{#
+        var date = new Date();
+        date.setTime(d.createTime);
+        return date.Format("yyyy-MM-dd hh:mm:ss");
+        }}
+    </script>
+    <script type="text/javascript"   src="/js/jQuery/jquery.easyui.min.js" ></script>
+    <script type="text/javascript" src="/js/utf8-jsp/ueditor.config.js"></script>
+    <script type="text/javascript" src="/js/utf8-jsp/ueditor.all.js"></script>
+    <link rel="stylesheet" href="/js/layui-v2.4.3/layui/css/layui.css" media="all">
+
+    <script>
+        var jsonone=new Array() ;
+        var datas;
+        function bao(s) {
+            // txt.value += s;
+            //alert("hahha");
+            $.ajax({
+                type:"get",
+                url:"/course/list",
+                //dataType:"json",
+                contentType:"application/json",
+                data:"teams="+s,
+                beforeSend:(request)=>{
+                request.setRequestHeader("Authorization",window.localStorage.getItem("token"));
+        },
+            success:function (result) {
+                if(result.msg=='success'){
+                    var Json = result.data.list;
+                    datas=Json;
+                    var name = Json[0].courseName;
+                    jsonone.push(name);
+                    var br = document.createElement("br");
+                    var courseName = document.createElement("input");
+                    courseName.type = "text";
+                    courseName.name= "name";
+                    courseName.disabled = "disabled";
+                    courseName.id = "name";
+                    courseName.value = name;
+                    document.body.appendChild(courseName);
+                    document.body.appendChild(br);
+                    var i = 1;
+                    var k = 1;
+                    for(var j = 0;j<Json.length;j++){
+                        if(name != Json[j].courseName){
+                            i++;
+                            name = Json[j].courseName;
+                            jsonone.push(name);
+                            var br1 = document.createElement("br");
+                            var courseName = document.createElement("input");
+                            courseName.type = "text";
+                            courseName.name= "name";
+                            courseName.id = "name";
+                            courseName.disabled = "disabled";
+                            courseName.value = name;
+                            document.body.appendChild(courseName);
+                            document.body.appendChild(br1);
+                            var parameterName = Json[j].parameterName;
+                            var br3 = document.createElement("br");
+                            var parameterName1 = document.createElement("input");
+                            parameterName1.type = "text";
+                            parameterName1.name= "name";
+                            parameterName1.disabled = "disabled";
+                            parameterName1.id = "parameterName"+i+k;
+                            parameterName1.value = parameterName;
+                            document.body.appendChild(parameterName1);
+                            var parameterValue = Json[j].parameterValue;
+                            var parameterValue1 = document.createElement("input");
+                            parameterValue1.type = "text";
+                            parameterValue1.name= name;
+                            parameterValue1.id = "parameterValue"+i+k;
+                            parameterValue1.value = parameterValue;
+                            document.body.appendChild(parameterValue1);
+                            document.body.appendChild(br3);
+                        }else{
+                            k++;
+                            var br2 = document.createElement("br");
+                            var parameterName = Json[j].parameterName;
+                            var parameterName2 = document.createElement("input");
+                            parameterName2.type = "text";
+                            parameterName2.name=  "name";
+                            parameterName2.id = "parameterName"+i+k;
+                            parameterName2.disabled = "disabled";
+                            parameterName2.value = parameterName;
+                            document.body.appendChild(parameterName2);
+
+                            var parameterValue = Json[j].parameterValue;
+                            var parameterValue2 = document.createElement("input");
+                            parameterValue2.type = "text";
+                            parameterValue2.name=  name;
+                            parameterValue2.id = "parameterValue"+i+k;
+                            // parameterValue2.disabled = "disabled";
+                            parameterValue2.value = parameterValue;
+                            document.body.appendChild(parameterValue2);
+                            document.body.appendChild(br2);
+
+                        }
+                    }
+                }
+                else{
+                }
+            }
+        });
+        }
+
+    </script>
+
+</head>
+<body>
+
+
+    <label>年度</label>
+
+    <select name = "teams" id="teams" onchange="bao(this.value)">
+        <option disabled="disabled" selected="selected">--请选择--</option>
+        <option value="2018">2018</option>
+        <option value="2017">2017</option>
+        <option value="2016">2016</option>
+
+    </select>
+
+            <button  onclick="dao()">立即提交</button>
+    <br>
+
+
+
+<script>
+    function dao() {
+        var s=document.getElementById("teams").value;
+                var list=[];
+                for(var i=0;i<jsonone.length;i++) {
+                    var data = {};
+                    var names = document.getElementsByName(jsonone[i]);
+                    for (var j = 0; j < datas.length; j++) {
+                        if (jsonone[i] == datas[j].courseName) {
+                        var l = 0;
+                        if(l==0){
+                            data["FormulaId"]=datas[j].formulaId;
+                            data["teams"]=s;
+                        }
+                        data[datas[j].parameterSymbol] = names[l].value;
+                        l++;
+                     }
+                 }
+                    list.push(data);
+                    }
+                    var final={};
+                    final["list"]=list;
+                    var finalJson=JSON.stringify(final);
+                    console.log(finalJson);
+
+            $.ajax({
+            type:"post",
+            url:"/workLoad/add",
+            dataType:"json",
+            contentType:"application/json",
+            data:finalJson,
+            beforeSend:(request)=>{
+            request.setRequestHeader("Authorization",window.localStorage.getItem("token"));
+    },
+        success:function(result){
+                if(result.code==0) {
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭
+                }
+                else{
+                    alert(result.msg);
+                }
+        }
+    });
+                }
+</script>
+
+
+</body>
+</html>

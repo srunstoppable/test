@@ -1,0 +1,109 @@
+/*创建登录信息表*/
+if exists(Select 1 From Sysobjects Where Name='UserInfo') 
+ drop table  UserInfo;
+create table UserInfo 
+(UserID int identity(1,1) primary key not null,
+Password nvarchar(20) not null,
+identify nvarchar(10) not null
+);
+
+
+/*创建管理员信息表*/
+if exists(Select 1 From Sysobjects Where Name='AdminInfo') 
+ drop table  AdminInfo;
+create table AdminInfo 
+(
+AdminID int identity(1,1) primary key not null, 
+UserID int  not null,
+foreign key(UserID) references UserInfo(UserID)
+);
+
+
+
+/*创建普通教职工信息表*/
+if exists(Select 1 From Sysobjects Where Name='TeacherInfo') 
+ drop table  TeacherInfo;
+create table TeacherInfo 
+(
+TeacherID int identity(1,1) primary key not null,
+UserID int not null,
+UserName nvarchar(20) not null,
+Duty nvarchar(10)  null,
+Content nvarchar(50)  null,
+foreign key(UserID) references UserInfo(UserID)
+);
+
+
+/*创建课程信息表*/
+if exists(Select 1 From Sysobjects Where Name='Course') 
+ drop table  Course;
+create table Course
+(
+CourseID int identity(1,1) primary key not null, 
+TeacherID int  not null,
+CourseName nvarchar(20) not null,
+CourseType nvarchar(20) not null,
+Credits int not null,
+PlanHours int not null,
+PlanStuNum int not null,
+ActualStuNum int not null,
+MergeNum int default(1),
+RepeatTimes int default(0),
+foreign key(TeacherID) references TeacherInfo(TeacherID)
+);
+
+
+/*创建提交工作量开关表*/
+if exists(Select 1 From Sysobjects Where Name='OnOff') 
+ drop table  OnOff;
+create table OnOff
+(
+CourseID int  not null, 
+AdminID int  not null,
+OnOffState nvarchar(5) not null,
+primary key(CourseID,AdminID),
+foreign key(CourseID) references Course(CourseID),
+foreign key(AdminID) references AdminInfo(AdminID),
+);
+
+
+/*创建公式表*/
+if exists(Select 1 From Sysobjects Where Name='Formula') 
+ drop table  Formula;
+create table Formula
+(
+FormulaID int identity(1,1) primary key not null, 
+FormulaName nvarchar(50) not null,
+FormulaValue nvarchar(50) not null
+);
+
+
+/*创建参数表*/
+if exists(Select 1 From Sysobjects Where Name='Parameter') 
+ drop table  Parameter;
+create table Parameter
+(
+ParameterID int identity(1,1) primary key not null, 
+ParameterName nvarchar(20) not null,
+ParameterSymbol nvarchar(10) not null,
+ParameterValue nvarchar(10) not null,
+FormulaID int ,
+foreign key(FormulaID) references Formula(FormulaID) 
+);
+
+
+/*创建工作量信息表*/
+if exists(Select 1 From Sysobjects Where Name='WorkLoad') 
+ drop table  WorkLoad;
+create table WorkLoad
+(
+WorkLoadID int identity(1,1) primary key not null, 
+CourseID int not null,
+WorkLoadValue nvarchar(10),
+foreign key(CourseID) references Course(CourseID) 
+);
+
+
+
+
+

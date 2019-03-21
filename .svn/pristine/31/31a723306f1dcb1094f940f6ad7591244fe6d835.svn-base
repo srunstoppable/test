@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="/js/layui-v2.4.3/layui/layui.js"></script>
+    <script type="text/javascript"   src="../js/jQuery/jquery.easyui.min.js" ></script>
+    <script type="text/javascript"   src="../js/jQuery/locale/easyui-lang-zh_CN.js"></script>
+    <link rel="stylesheet" type="text/css"   href="../js/jQuery/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css"   href="../js/jQuery/themes/icon.css" />
+    <link rel="stylesheet" href="/js/layui-v2.4.3/layui/css/layui.css" media="all"/>
+</head>
+<body class="layui-layout-body">
+
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">教师工作量管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item"><a href="#" onclick="logout()">退出</a></li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item"><a href="#" onclick="openTabs(this)">公式操作</a></li>
+                <li class="layui-nav-item"><a href="#" onclick="openTabs(this)">工作量查询</a></li>
+                <li class="layui-nav-item"><a href="#" onclick="openTabs(this)">管理员工作量查询</a></li>
+                <li class="layui-nav-item"><a href="#" onclick="openTabs(this)">参数操作</a></li>
+                <li class="layui-nav-item"><a href="#" onclick="openTabs(this)" id="open">开启工作量提交</a></li>
+                <li class="layui-nav-item"><a href="#" onclick="openTabs(this)" id="close">关闭工作量提交</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body"style="height: 100%" >
+        <div id="tt" class="easyui-tabs" style="width: 100%;height: 100%; ">
+
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+        if(window.localStorage.getItem("token") == null ){
+            window.location.href = "/login_view.html";
+        }
+
+        var content1 = '<iframe scrolling="no" frameborder="0" src="/views/welcome.html" style="width:100%;height:100%;"></iframe>'
+        $('#tt').tabs('add', {
+            title: '首页',
+            content: content1,
+            closable: false
+
+        });
+    });
+    function openTabs(param) {
+        var value=param.innerHTML;
+        if(value=="工作量查询"){
+            var content='<iframe scrolling="no" frameborder="0" src="/views/workload_admin.html" style="width:100%;height:100%;"></iframe>';
+            if ($('#tt').tabs('exists', '工作量查询')){
+
+                $('#tt').tabs('select', '工作量查询');
+            } else {
+                $('#tt').tabs('add',{
+                    title:'工作量查询',
+                    content:content,
+                    closable:true
+
+                });
+            }
+
+        }
+
+        if(value=="管理员工作量查询"){
+            var content='<iframe scrolling="no" frameborder="0" src="/views/workload_teacher.html" style="width:100%;height:100%;"></iframe>';
+            if ($('#tt').tabs('exists', '管理员工作量查询')){
+
+                $('#tt').tabs('select', '管理员工作量查询');
+            } else {
+                $('#tt').tabs('add',{
+                    title:'管理员工作量查询',
+                    content:content,
+                    closable:true
+
+                });
+            }
+
+        }
+
+        if(value=='公式操作'){
+            var content='<iframe scrolling="no" frameborder="0" src="/views/formula.html" style="width:100%;height:100%;"></iframe>';
+            if ($('#tt').tabs('exists', '公式操作')){
+
+                $('#tt').tabs('select', '公式操作');
+            } else {
+                $('#tt').tabs('add',{
+                    title:'公式操作',
+                    content:content,
+                    closable:true
+
+                });
+            }
+        }
+        if(value=='参数操作'){
+            var content='<iframe scrolling="no" frameborder="0" src="/views/parameter.html" style="width:100%;height:100%;"></iframe>';
+            if ($('#tt').tabs('exists', '公式参数操作')){
+
+                $('#tt').tabs('select', '公式参数操作');
+            } else {
+                $('#tt').tabs('add',{
+                    title:'公式参数操作',
+                    content:content,
+                    closable:true
+
+                });
+            }
+        }
+        // if(value=='开启量计算方式'){
+        //     var content='<iframe scrolling="no" frameborder="0" src="/views/gbgzl.html" style="width:100%;height:100%;"></iframe>';
+        //     if ($('#tt').tabs('exists', '开启工作量提交')){
+        //
+        //         $('#tt').tabs('select', '开启工作量提交');
+        //     } else {
+        //         $('#tt').tabs('add',{
+        //             title:'开启工作量提交',
+        //             content:content,
+        //             closable:true
+        //
+        //         });
+        //     }
+        // }
+        // if(value=='关闭量计算方式'){
+        //     var content='<iframe scrolling="no" frameborder="0" src="/views/gbgzl.html" style="width:100%;height:100%;"></iframe>';
+        //     if ($('#tt').tabs('exists', '关闭量计算方式')){
+        //
+        //         $('#tt').tabs('select', '关闭量计算方式');
+        //     } else {
+        //         $('#tt').tabs('add',{
+        //             title:'开启工作量提交',
+        //             content:content,
+        //             closable:true
+        //
+        //         });
+        //     }
+        // }
+    }
+    function logout() {
+        window.localStorage.clear();
+        window.location.href = "/login_view.html";
+    }
+</script>
+
+
+<script>
+    $(document).ready(function(){
+        $("#open").click(function(){
+            $.ajax({
+                type:"put",
+                async:false,
+                url:"/onOff/open",
+                contentType:"application/json;charset=utf-8",
+                // data:JsonData,
+                beforeSend:(request)=>{
+                request.setRequestHeader("Authorization",window.localStorage.getItem("token"));
+        },
+            success:function(result) {
+                if (result.success) {
+                    alert(result.message);
+                }
+                else
+                    alert(result.message);
+            }
+        });
+
+        });
+
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $("#close").click(function(){
+            $.ajax({
+                type:"put",
+                async:false,
+                url:"/onOff/close",
+                contentType:"application/json;charset=utf-8",
+                // data:JsonData,
+                beforeSend:(request)=>{
+                request.setRequestHeader("Authorization",window.localStorage.getItem("token"));
+        },
+            success:function(result) {
+                if (result.success) {
+                    alert(result.message);
+                }
+                else
+                    alert(result.message);
+            }
+        });
+
+        });
+
+    });
+</script>
+</body>
+</html>

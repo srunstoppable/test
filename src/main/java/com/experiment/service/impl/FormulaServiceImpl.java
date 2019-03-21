@@ -1,0 +1,102 @@
+package com.experiment.service.impl;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.experiment.Utils.Response;
+import com.experiment.Utils.Result;
+import com.experiment.entity.Formula;
+import com.experiment.entity.Parameter;
+import com.experiment.mapper.FormulaMapper;
+import com.experiment.service.FormulaService;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.experiment.service.ParameterService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+/**
+ * <p>
+ *  服务实现类
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-23
+ */
+@Service
+public class FormulaServiceImpl extends ServiceImpl<FormulaMapper, Formula> implements FormulaService {
+
+    @Autowired
+    private ParameterService parameterService;
+
+
+    @Override
+    public Response query(Page<Formula> page) {
+//        EntityWrapper<Formula> ew=new EntityWrapper<>();
+        Map<Integer,Object> map=new TreeMap<>();
+//       for( Formula formula:selectPage(page).getRecords()){
+        for(Formula formula:baseMapper.selectList(page)){
+           map.put(formula.getFormulaID(),formula);
+       }
+       return Response.success(baseMapper.selectTotal()).putAllT(map);
+    }
+
+
+
+
+    @Override
+    public Formula search(String param) {
+        EntityWrapper<Formula>ew=new EntityWrapper<>();
+        ew.eq("formulaName",param);
+        if(baseMapper.selectList(ew).equals(Collections.emptyList())){
+            return null;
+        }
+        return baseMapper.selectList(ew).get(0);
+    }
+
+    @Override
+    public Formula search(int param) {
+        return selectById(param);
+    }
+
+    @Override
+    public void update(Formula formula) {
+        baseMapper.updateById(formula);
+    }
+
+    @Override
+    public void add(Formula formula) {
+        baseMapper.insert(formula);
+    }
+
+
+    /**判断公式里的参数在参数表是否有对应值
+     *
+     * @param formula
+     * @return
+     */
+    public boolean check(Formula formula) {
+        List<Parameter> list = parameterService.search(formula.getFormulaID());
+        if(list.equals(Collections.emptyList())){
+            return false;
+        }
+        List<Character> list1 = new ArrayList<>();
+        for (Parameter p : list) {
+            list1.add(p.getParameterSymbol().charAt(0));
+        }
+        char[] c2 = formula.getFormulaValue().toCharArray();
+        for (char c : c2){
+            if(c >= 97 && c <= 122) {
+                if (!list1.contains(c)){
+                   return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void delete(Formula formula) {
+        deleteById(formula.getFormulaID());
+    }
+}

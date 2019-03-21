@@ -1,0 +1,60 @@
+package com.experiment.Utils;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.util.Date;
+
+/**
+ *
+ * 数据库实体基础类
+ * @author s r
+ * @date 2018/11/21
+ */
+@Data
+@Accessors(chain = true)
+public class BaseEntity {
+    public static final String CREATE_BY_FIELD = "createBy";
+    public static final String CREATE_TIME_FIELD = "createTime";
+    public static final String UPDATE_BY_FIELD = "updateBy";
+    public static final String UPDATE_TIME_FIELD = "updateTime";
+    public static final String DEL_FLAG_FIELD = "delFlag";
+
+//    @TableField(value = "CREATE_BY", fill = FieldFill.INSERT)
+//    @ApiModelProperty(hidden = true)
+//    @JSONField(serialize = false)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    private String createBy;
+//
+//    @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
+//    @ApiModelProperty(hidden = true)
+//    @JSONField(serialize = false)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    private Date createTime;
+//
+//    @TableField(value = "UPDATE_BY", fill = FieldFill.INSERT_UPDATE)
+//    @ApiModelProperty(hidden = true)
+//    @JSONField(serialize = false)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    private String updateBy;
+//
+//    @TableField(value = "UPDATE_TIME", fill = FieldFill.INSERT_UPDATE)
+//    @ApiModelProperty(hidden = true)
+//    @JSONField(serialize = false)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    private Date updateTime;
+//
+//    /**
+//     * 删除标记，0：未删除，1：删除
+//     */
+//    @TableField(value = "DEL_FLAG", fill = FieldFill.INSERT)
+//    @ApiModelProperty(hidden = true)
+//    @JSONField(serialize = false)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    private Integer delFlag;
+}

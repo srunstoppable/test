@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="/js/layui-v2.4.3/layui/layui.js"></script>
+    <link rel="stylesheet" href="/js/layui-v2.4.3/layui/css/layui.css" media="all"/>
+
+</head>
+<body>
+<script type="text/html" id="toolbarDemo">
+    <!--<div class="layui-btn-container">-->
+    <button class="layui-btn layui-btn-sm" lay-event="save">新增</button>
+    <input   style="width: 200px;height: 30px;line-height: 30px;"  id="condition">
+    <button class="layui-btn layui-btn-sm" lay-event="lookFor">查询</button>
+</script>
+
+
+
+<div style="margin:20px auto 20px;">
+<form action="" style="margin: 20px auto 20px;padding: 20px;">
+
+    <label>请选择:</label>
+
+    <input   name="teams" id="teams" type="text" width="200px" placeholder="小组"  class="layui-text"/>
+    <input   name="usersid" id="userid" type="text" width="200px" placeholder="ID名" class="layui-text"/>
+    <input   name="workLoadID" id="workLoadID" type="text" width="200px" placeholder="工作ID" class="layui-text"/>
+    <input   name="workLoadValue" id="workLoadValue" type="text" width="200px" placeholder="工作值" class="layui-text"/>
+    <button id="search" class="layui-btn layui-btn-primary">查询往年工作量</button>
+
+
+    <button id="add" class="layui-btn layui-btn-primary">添加新的工作量</button>
+
+
+    <input   name="time" id="time" type="text" width="200px" placeholder="年份" class="layui-text" value=""/>
+    <button id="list" class="layui-btn layui-btn-primary">查询所有人工作量</button>
+
+</form>
+</div>
+
+
+<div style="padding: 15px;">
+    <table  id="article" style="height: 100%"  lay-filter="article">
+    </table>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        $("#search").click(function(){
+                $.ajax({
+                    type:"get",
+                    async:false,
+                    url:"/workLoad/search",
+                    contentType:"application/json;charset=utf-8",
+                    beforeSend:(request)=>{
+                      request.setRequestHeader("Authorization",window.localStorage.getItem("token"));
+
+                    },
+                    success:function(result) {
+                        if (result.success) {
+                            alert(result);
+                        }
+                        else
+                            alert(result.message);
+                    }
+                });
+
+        });
+
+    });
+</script>
+
+<!--<script>-->
+    <!--$("#add").button().click(function () {-->
+        <!--$("dialog-add").dialog("open");-->
+    <!--});-->
+<!--</script>-->
+
+<script>
+    $(document).ready(function(){
+        $("#list").click(function(){
+
+                var formData=$("#time").val();
+
+                $.ajax({
+                    type:"get",
+                    async:false,
+                    url:"/workLoad/list",
+                    data:"param="+formData,
+                    contentType:"application/json;charset=utf-8",
+                    beforeSend:(request)=>{
+                        request.setRequestHeader("Authorization",window.localStorage.getItem("token"));
+                    },
+                    success:function(result) {
+                        if (result.success) {
+                            alert(result);
+                        }
+                        else
+                            alert(result.message);
+                    }
+                });
+
+        });
+
+    });
+</script>
+</body>
+</html>

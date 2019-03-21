@@ -1,0 +1,120 @@
+create table s_identity(
+    id int identity(1,1) primary key ,
+    name varchar(50) not null unique
+);
+
+create table userinfo(
+    id varchar(11) primary key not null,
+    password varchar(50) not null,
+    name varchar(50) not null,
+    iden varchar(50) not null,
+    Content nvarchar(50)  null,
+    Duty nvarchar(10)  null,
+    foreign key (iden) references s_identity(name)
+);
+
+insert into s_identity values('教师');
+
+insert into s_identity values('管理员');
+
+insert into userinfo(id,password,name,iden) values('admin','admin','admin','管理员');
+insert into userinfo(id,password,name,iden) values('10004','123456','教师1','教师');
+select * from userinfo
+
+/**
+  目前将所有工作量提交放在一个按钮上，控制所有
+  创建提交工作量开关表
+*/
+if exists(Select 1 From Sysobjects Where Name='OnOff')
+ drop table  OnOff;
+create table OnOff
+(
+id int identity (1,1) primary key not null,
+AdminID varchar(11)  not null unique ,
+OnOffState nvarchar(5) not null check (OnOffState in ('开放','关闭')),
+foreign key(AdminID) references userinfo(id),
+);
+
+insert into OnOff values ('admin','关闭')
+
+
+/*创建参数表*/
+if exists(Select 1 From Sysobjects Where Name='Parameter')
+ drop table  Parameter;
+create table Parameter
+(
+ParameterID int identity(1,1) primary key not null,
+ParameterName nvarchar(20) not null,
+ParameterSymbol nvarchar(10) not null,
+ParameterValue nvarchar(10) not null,
+FormulaID int ,
+foreign key(FormulaID) references Formula(FormulaID)
+);
+
+/*创建公式表*/
+if exists(Select 1 From Sysobjects Where Name='Formula')
+ drop table  Formula;
+create table Formula
+(
+FormulaID int identity(1,1) primary key not null,
+FormulaName varchar(50) not null,
+FormulaValue varchar(50) not null
+);
+
+
+/**  课程学期信息表    */
+
+cerate table course_teams(
+  id int identity(1,1) primary key not null,
+  context varchar(10) unique not null
+)
+insert into course_teams values ('2018年秋');
+insert into course_teams values ('2018年春');
+insert into course_teams values ('2017年秋');
+insert into course_teams values ('2017年春');
+insert into course_teams values ('2016年秋');
+insert into course_teams values ('2016年春');
+
+
+/**  工作量年度信息表    */
+create table workload_teams(
+  id int identity(1,1) primary key not null,
+  context varchar(20) unique not null
+)
+insert into workload_teams values ('2018');
+insert into  workload_teams values ('2017');
+insert into  workload_teams values ('2016');
+)
+
+
+
+create table course_type(
+  id int identity (1,1) primary key not null ,
+  name varchar (11) unique not null
+)
+insert into course_type values ('理论课');
+insert into course_type values ('实验课');
+insert into course_type values ('上级课');
+
+if exists(Select 1 From Sysobjects Where Name='Course')
+ drop table  Course;
+create table Course
+(
+CourseID int identity(1,1) primary key not null,
+userid varchar(11)  not null,
+CourseName varchar(20) not null,
+CourseType varchar(11) not null,
+teams varchar(20) not null,
+foreign key(userid) references userInfo(id),
+foreign key(CourseType) references course_type(name),
+foreign key (teams) references  course_teams(context)
+);
+
+insert into Course values ('10004','网络安全','理论课','2018年秋')
+insert into Course values ('10004','综合实践','理论课','2018年春')
+
+
+
+   select * from course join (
+   select formula.formulaname,parameter.* from formula join parameter on formula.formulaid like parameter.formulaid)tmp
+   on  tmp.FormulaName like '%'+CourseType+'%' where teams like '%2018%'

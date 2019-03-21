@@ -1,0 +1,29 @@
+package com.experiment.service;
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.experiment.Utils.Response;
+import com.experiment.Utils.Result;
+import com.experiment.entity.Formula;
+import com.baomidou.mybatisplus.service.IService;
+
+import java.util.List;
+
+/**
+ * <p>
+ *  服务类
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-23
+ */
+public interface FormulaService extends IService<Formula> {
+        public Response query(Page<Formula>page);
+        public Formula search(String param);
+        public Formula search(int param);
+        public void update(Formula formula);
+        public void add(Formula formula);
+        public boolean check(Formula formula);
+        public void delete(Formula formula);
+
+
+}

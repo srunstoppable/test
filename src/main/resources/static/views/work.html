@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="/js/layui-v2.4.3/layui/layui.js"></script>
+    <script type="text/javascript"   src="js/jQuery/jquery.easyui.min.js" ></script>
+    <script type="text/javascript"   src="js/jQuery/locale/easyui-lang-zh_CN.js"></script>
+    <link rel="stylesheet" type="text/css"   href="js/jQuery/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css"   href="js/jQuery/themes/icon.css" />
+    <link rel="stylesheet" href="/js/layui-v2.4.3/layui/css/layui.css" media="all"/>
+</head>
+<body>
+<script type="text/html" id="toolbarDemo">
+    <!--<div class="layui-btn-container">-->
+    <button class="layui-btn layui-btn-sm" lay-event="save">新增</button>
+    <input   style="width: 200px;height: 30px;line-height: 30px"  id="condition">
+    <button class="layui-btn layui-btn-sm" lay-event="lookFor">查询</button>
+</script>
+
+<div style="padding: 15px;">
+    <table  id="work" style="height: 100%"  lay-filter="work">
+    </table></div>
+
+
+<script>
+    layui.use('table',function () {
+        var table =layui.table;
+        table.render({
+            height:'full-200',
+            elem:'#work',
+            url:  '',
+            toolbar:'#toolbarDemo',
+            title:'工作量一览',
+            page:true,
+            cols:[[
+                {type:'checkbox',fixed:'left'},
+                { field:'articleid',title:"id" ,sort:false,},
+                { field:'title', title:"标题" ,sort:false},
+                { field:'introduction',title:"简介" ,sort:false},
+                { field:'content',title:"内容" ,sort:false},
+                { field:'authorid',title:"发布者" ,sort:false},
+                { field:'count',title:"访问量" ,sort:false},
+                {
+                    field: 'time',  title: "发布日期", sort: false,
+                    templet: function (row) {
+                        return createTime(row.time)
+                    }
+                }
+            ]]
+        });
+        table.on('toolbar(article)', function(obj){
+        //     if(obj.event=='del') {
+        //         var checkStatus = table.checkStatus(obj.config.id);
+        //         var data=checkStatus.data;
+        //         var JsonData=JSON.stringify(data);
+        //         if (data.length > 1) {
+        //             alert("不能同时删除两天记录!");
+        //         }
+        //         else if (data.length = 0)
+        //             alert("请选中一条数据");
+        //         else {
+        //             if (confirm("确定删除记录？")) {
+        //                 $.ajax({
+        //                     type:"post",
+        //                     url:"/article/delete",
+        //                     dataType:"json",
+        //                     contentType:"application/json",
+        //                     data:JsonData,
+        //                     success:function (result) {
+        //                         if(result.MGS="success"){
+        //                             table.reload('test');
+        //                         }
+        //                         else{
+        //                             alert("删除失败");
+        //                         }
+        //                     }
+        //                 });
+        //             }
+        //
+        //         }
+        //     }
+            if(obj.event=='lookFor'){
+                var v=document.getElementById('condition').value;
+
+                table.reload('test',{
+                    url:"/work/search"
+                    ,where:{
+                        title:v,
+                    },
+                    method:"post",
+                    page:true
+                });
+
+
+            }
+            // if(obj.event=='edit'){
+            //     var checkStatus = table.checkStatus(obj.config.id);
+            //     var data=checkStatus.data;
+            //     var JsonData=data[0];
+            //     console.log(JsonData);
+            //     if(data.length<1){
+            //         alert("请选中一条记录");
+            //     }
+            //     else if(data.length>1){
+            //         alert("请选中单挑记录进性修改");
+            //     }
+            //     else {
+            //
+            //         layer.open({
+            //             id:"update",
+            //             type:2,
+            //             content:"update2.html",
+            //             area:['800px','600px'],
+            //             offset:['20px'],
+            //             success:function (selector,index) {
+            //                 var body=layer.getChildFrame('body',index);
+            //                 var iframeWin = window[selector.find('iframe')[0]['name']];
+            //                 console.log(JsonData.content);
+            //                 while ( body.find('#content').val()==null||body.find('#content').val()=="") {
+            //                     body.find('#content').val(JsonData.content);
+            //                 }
+            //                 body.find('#content').val(JsonData.content);
+            //                 body.find('#articleid').val( JsonData.articleid);
+            //                 body.find('#title').val( JsonData.title);
+            //                 body.find('#introduction').val( JsonData.introduction);
+            //                 body.find('#count').val( JsonData.count);
+            //                 body.find('#time').val(JsonData.time);
+            //                 iframeWin.a();
+            //             }
+            //         });
+            //     }
+            // }
+            if(obj.event=="save"){
+                layer.open({
+                    id:"save",
+                    type:2,
+                    content:'save.html',
+                    offset:['20px'],
+                    area:['800px','600px'],
+                });
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+package com.experiment.Utils;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
+public class Test {
+    public static void main(String args[]){
+//            String s="(10-3.5)*(4.3+2.4)/5@";
+//            String s2=Compute.change(s);
+//            System.out.println(s2);
+//           System.out.println(Compute.compute(s2));
+
+//        SequenceStack sequenceStack=new SequenceStack();
+//        int [] a={3,8,5,17,9,30,15,22};
+//        for(int i=0;i<a.length;i++)
+//            sequenceStack.push(a[i]);
+//        System.out.println(sequenceStack.pop()+","+sequenceStack.pop()+","+sequenceStack.pop());
+//        sequenceStack.push(68);
+//        System.out.println(sequenceStack.peek()+","+sequenceStack.pop()+","+sequenceStack.pop());
+//        while (!sequenceStack.isEmpty()) System.out.println(sequenceStack.pop()+" ");
+//        System.out.println();
+//        sequenceStack.clear();
+//        int a[]={1,2,3,4,5,5,5,6,6};
+//        int i= Arrays.binarySearch(a,5);System.out.println(i);
+    }
+}

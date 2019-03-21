@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="/js/layui-v2.4.3/layui/layui.js"></script>
+    <link rel="stylesheet" href="/js/layui-v2.4.3/layui/css/layui.css" media="all"/>
+</head>
+<body>
+<script type="text/html" id="toolbarDemo">
+    <!--<div class="layui-btn-container">-->
+    <button class="layui-btn layui-btn-sm" lay-event="save">新增</button>
+    <input   style="width: 200px;height: 30px;line-height: 30px;"  id="condition">
+    <button class="layui-btn layui-btn-sm" lay-event="lookFor">查询</button>
+</script>
+
+
+
+<div style="margin:20px auto 20px;">
+    <form action="" style="margin: 20px auto 20px;padding: 20px;">
+
+        <!--<button id="check" class="layui-btn layui-btn-primary">检查工作量</button>-->
+        <button id="open" class="layui-btn layui-btn-primary">开启工作量</button>
+        <button id="close" class="layui-btn layui-btn-primary">关闭工作量</button>
+
+    </form>
+</div>
+
+
+<div style="padding: 15px;">
+    <table  id="article" style="height: 100%"  lay-filter="article">
+    </table>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        $("#check").click(function(){
+                $.ajax({
+                    type:"post",
+                    async:false,
+                    url:"/onOff/check",
+                    contentType:"application/json;charset=utf-8",
+                    // data:JsonData,
+                    beforeSend:(request)=>{
+                    request.setRequestHeader("Authorization",window.localStorage.getItem("token"));
+        },
+                    success:function(result) {
+                        if (result.success) {
+                            alert(result.data.valueOf());
+                        }
+                        else
+                            alert(result.message);
+                    }
+                });
+
+        });
+
+    });
+</script>
+
+</body>
+</html>

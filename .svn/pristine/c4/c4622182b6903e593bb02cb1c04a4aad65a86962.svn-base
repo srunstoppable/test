@@ -1,0 +1,20 @@
+create table s_identity(
+    id int identity(1,1) primary key ,
+    name varchar(50) not null unique
+);
+
+create table userinfo(
+    id varchar(11) primary key not null,
+    password varchar(50) not null,
+    name varchar(50) not null,
+    iden varchar(50) not null,
+    Content nvarchar(50)  null,
+    Duty nvarchar(10)  null,
+    foreign key (iden) references s_identity(name)
+);
+
+insert into s_identity values('教师');
+
+insert into s_identity values('管理员');
+
+insert into userinfo(id,password,name,iden) values('admin','admin','admin','管理员');

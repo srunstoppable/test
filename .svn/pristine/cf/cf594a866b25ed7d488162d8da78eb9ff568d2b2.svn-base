@@ -1,0 +1,76 @@
+package com.experiment.controller;
+
+import com.experiment.Utils.JWTUtil;
+import com.experiment.Utils.Result;
+import com.experiment.entity.Userinfo;
+import com.experiment.service.UserinfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.experiment.Utils.BaseController;
+import javax.servlet.http.HttpServletRequest;
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-21
+ */
+@Api(value = "用户登录api",description = "用户登录api")
+@RestController
+@RequestMapping("/userinfo")
+public class UserinfoController extends BaseController {
+
+    @Autowired
+    private UserinfoService userinfoService;
+
+    @ApiOperation(value = "用户登录",notes = "用户登录",response = Result.class)
+    @ApiImplicitParams({
+    })
+    @PostMapping(value = "/login")
+    public Result login(@RequestBody Userinfo userinfo, HttpServletRequest request){
+        Result result=new Result();
+        Userinfo user=userinfoService.getUser(userinfo);
+        if(user!=null) {
+            result.setData(JWTUtil.sign(user.getId(), user.getPassword()));
+            result.setSuccess(true);
+        }
+        return result;
+    }
+//        }else {
+//            throw new UnauthorizedException();
+//        }
+//        try {
+//            UsernamePasswordToken token = new UsernamePasswordToken(userinfo.getId(), userinfo.getPassword());
+//            Subject subject = SecurityUtils.getSubject();
+//            Userinfo userinfo1 = (Userinfo) subject.getPrincipal();
+//          HttpSession session=request.getSession();
+//          Result result=userinfoService.login(userinfo);
+//          if(result.isSuccess()){
+//            session.setAttribute("userToken",result.getUserinfo());
+//        }
+//        return result;
+//        }catch (AuthenticationException e){
+//            result.setMessage("用户名密码错误");
+//            result.setSuccess(false);
+//        }
+//            result.setSuccess(true);
+//        return result;
+//    @ApiOperation(value = "用户退出",notes = "用户退出")
+//    @PostMapping("/logout")
+//    public Result logout(HttpServletRequest request){
+//        HttpSession session=request.getSession();
+//            session.removeAttribute("userToken");
+//            Result result=new Result();
+//            result.setSuccess(true);
+//            return  result;
+//    }
+
+
+
+
+}
+

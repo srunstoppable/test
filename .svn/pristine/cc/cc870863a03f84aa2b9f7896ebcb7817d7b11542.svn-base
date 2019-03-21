@@ -1,0 +1,40 @@
+create table s_identity(
+    id int identity(1,1) primary key ,
+    name varchar(50) not null unique
+);
+
+create table userinfo(
+    id varchar(11) primary key not null,
+    password varchar(50) not null,
+    name varchar(50) not null,
+    iden varchar(50) not null,
+    Content nvarchar(50)  null,
+    Duty nvarchar(10)  null,
+    foreign key (iden) references s_identity(name)
+);
+
+insert into s_identity values('教师');
+
+insert into s_identity values('管理员');
+
+insert into userinfo(id,password,name,iden) values('admin','admin','admin','管理员');
+insert into userinfo(id,password,name,iden) values('10004','123456','教师1','教师');
+select * from userinfo
+
+
+
+/**
+  目前将所有工作量提交放在一个按钮上，控制所有
+  创建提交工作量开关表
+*/
+if exists(Select 1 From Sysobjects Where Name='OnOff')
+ drop table  OnOff;
+create table OnOff
+(
+id int identity (1,1) primary key not null,
+AdminID varchar(11)  not null unique ,
+OnOffState nvarchar(5) not null check (OnOffState in ('开放','关闭')),
+foreign key(AdminID) references userinfo(id),
+);
+
+insert into OnOff values ('admin','关闭')

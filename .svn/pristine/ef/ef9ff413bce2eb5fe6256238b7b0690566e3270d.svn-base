@@ -1,0 +1,83 @@
+package com.experiment.controller;
+
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.experiment.Utils.Response;
+import com.experiment.entity.FormulaParameter;
+import com.experiment.entity.Parameter;
+import com.experiment.service.ParameterService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.experiment.Utils.BaseController;
+
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-23
+ */
+@Api(value = "参数操作api",description = "参数操作pai")
+@RestController
+@RequestMapping("/parameter")
+public class ParameterController extends BaseController {
+
+
+
+    @Autowired
+    private ParameterService parameterService;
+
+
+    @ApiOperation(value = "分页查询所有参数",response = FormulaParameter.class)
+    @RequiresRoles("管理员")
+    @GetMapping(value = "/list")
+    public Response list(){
+        Integer []integers=getPageSizeFromGetRequest();
+        Page<FormulaParameter>page=new Page<>(integers[0],integers[1]);
+        return  Response.success(parameterService.list(page));
+    }
+
+
+    @ApiOperation(value = "查询公式id对应的参数表",notes = "传的是公式的id",response = Response.class)
+    @RequiresRoles("管理员")
+    @ApiImplicitParam(name = "id",value = "id" ,paramType = "query",required = true,dataType = "int")
+    @GetMapping(value = "/search")
+    public Response search(@RequestParam("id")int id){
+        return Response.success(parameterService.search(id));
+    }
+
+    @ApiOperation(value = "更新单个参数",notes = "更新单个参数，前台控制ParameterID，FormulaId，symbol不可修改，或者symbol字段页面不显示",response = Response.class)
+    @ApiImplicitParam(name = "parameter",value = "parameter",paramType = "body",required = true)
+    @RequiresRoles("管理员")
+    @PutMapping("/update")
+    public Response update(@RequestBody Parameter parameter){
+        parameterService.update(parameter);
+        return Response.success();
+    }
+
+    @ApiOperation(value = "删除单个参数",notes = "删除单个参数",response = Response.class)
+    @ApiImplicitParam(name = "id",value = "id" ,paramType = "query",required = true,dataType = "int")
+    @RequiresRoles("管理员")
+    @DeleteMapping("/delete")
+    public Response delete(@RequestParam("id")int id){
+        parameterService.delete(id);
+        return Response.success();
+    }
+
+    @ApiOperation(value = "增加单个参数",notes = "增加单个参数时，不用传Symbol字段， ParameterID不用传,其他都要传",response =Parameter.class)
+    @ApiImplicitParam(name = "parameter",value = "parameter",paramType = "body",required = true)
+    @RequiresRoles("管理员")
+    @PostMapping("/add")
+    public Response add(@RequestBody Parameter parameter){
+        parameterService.add(parameter);
+        return Response.success();
+    }
+
+}
+

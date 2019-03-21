@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="/js/layui-v2.4.3/layui/layui.js"></script>
+    <link rel="stylesheet" href="/js/layui-v2.4.3/layui/css/layui.css" media="all"/>
+
+
+</head>
+<body>
+
+<label>请选择:</label>
+<input   name="teams" id="teams" type="text" width="200px" placeholder="小组"  class="layui-text"/>
+<input   name="usersid" id="userid" type="text" width="200px" placeholder="ID名" class="layui-text"/>
+<input   name="workLoadID" id="workLoadID" type="text" width="200px" placeholder="工作ID" class="layui-text"/>
+<input   name="workLoadValue" id="workLoadValue" type="text" width="200px" placeholder="工作值" class="layui-text"/>
+
+
+</body>
+</html>

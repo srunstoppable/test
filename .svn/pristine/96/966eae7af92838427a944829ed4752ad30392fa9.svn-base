@@ -1,0 +1,9 @@
+package com.experiment.service;
+
+import com.experiment.Utils.Response;
+import com.experiment.Utils.Result;
+import com.experiment.pojo.User;
+
+public interface UserService {
+    Result login(User user);
+}

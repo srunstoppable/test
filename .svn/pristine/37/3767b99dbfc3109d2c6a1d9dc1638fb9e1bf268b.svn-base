@@ -1,0 +1,12 @@
+package com.experiment.dao;
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.experiment.pojo.User;
+import org.springframework.stereotype.Component;
+
+@Component(value = "userMapper")
+public interface UserMapper extends BaseMapper<User> {
+
+
+
+}

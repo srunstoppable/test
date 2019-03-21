@@ -1,0 +1,56 @@
+package com.experiment.controller;
+
+
+import com.experiment.Utils.Response;
+import com.experiment.Utils.Result;
+import com.experiment.entity.Userinfo;
+import com.experiment.service.UserinfoService;
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.experiment.Utils.BaseController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-21
+ */
+@Api(value = "用户登录api",description = "用户登录api")
+@RestController
+@RequestMapping("/userinfo")
+public class UserinfoController extends BaseController {
+
+    @Autowired
+    private UserinfoService userinfoService;
+
+
+    @RequestMapping("/login")
+    public Result login(@RequestBody Userinfo userinfo, HttpServletRequest request){
+        HttpSession session=request.getSession();
+        Result result=userinfoService.login(userinfo);
+        if(result.isSuccess()){
+            session.setAttribute("userToken",result.getUserinfo());
+        }
+        return result;
+    }
+
+    @RequestMapping("/logout")
+    public Result logout(HttpServletRequest request){
+        HttpSession session=request.getSession();
+            session.removeAttribute("userToken");
+            Result result=new Result();
+            result.setSuccess(true);
+            return  result;
+    }
+
+
+
+}
+

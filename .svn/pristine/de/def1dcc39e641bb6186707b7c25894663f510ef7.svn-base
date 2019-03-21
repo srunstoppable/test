@@ -1,0 +1,40 @@
+package com.experiment.service.impl;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.experiment.Utils.Result;
+import com.experiment.entity.Userinfo;
+import com.experiment.mapper.UserinfoMapper;
+import com.experiment.service.UserinfoService;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import org.apache.catalina.User;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+/**
+ * <p>
+ *  服务实现类
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-21
+ */
+@Service
+public class UserinfoServiceImpl extends ServiceImpl<UserinfoMapper, Userinfo> implements UserinfoService {
+
+
+    @Override
+    public Result login(Userinfo userinfo) {
+       Result result=new Result();
+        Userinfo user=selectById(userinfo.getId());
+        if(!user.getPassword().equals(userinfo.getPassword())){
+            result.setSuccess(false);
+        }
+        else {
+            result.setSuccess(true);
+        }
+            result.setObject(user);
+            return result;
+    }
+}

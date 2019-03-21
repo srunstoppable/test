@@ -1,0 +1,48 @@
+package com.experiment.service.impl;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.experiment.entity.WorkLoad;
+import com.experiment.mapper.WorkLoadMapper;
+import com.experiment.service.WorkLoadService;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * <p>
+ *  服务实现类
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-25
+ */
+@Service
+public class WorkLoadServiceImpl extends ServiceImpl<WorkLoadMapper, WorkLoad> implements WorkLoadService {
+
+    @Override
+    public void add(WorkLoad workLoad) {
+        insert(workLoad);
+    }
+
+
+
+    //管理员查询
+    @Override
+    public List<WorkLoad> list(String param) {
+        EntityWrapper<WorkLoad>ew=new EntityWrapper<>();
+        if (param!=null)
+            ew.eq("context",param);
+        return  selectList(ew);
+    }
+
+    //教师查询历年工作量
+    @Override
+    public List<WorkLoad> searchByUserId(String param) {
+        EntityWrapper<WorkLoad>ew=new EntityWrapper<>();
+        ew.eq("userid",param);
+        return selectList(ew);
+    }
+
+
+}

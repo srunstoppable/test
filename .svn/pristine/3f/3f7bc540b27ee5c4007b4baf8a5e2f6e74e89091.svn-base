@@ -1,0 +1,19 @@
+package com.experiment.mapper;
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+/**
+ * @author s r
+ * @date 2018/11/25
+ */
+@Mapper
+public interface SubmitWorkLoadMapper extends BaseMapper<SubmitWorkLoadMapper> {
+    @Select("select * from ( select * from course join (\n" +
+            "   select formula.formulaName,parameter.* from formula join parameter on formula.formulaId like parameter.formulaId)tmp\n" +
+            "   on  tmp.FormulaName like '%'+CourseType+'%' where teams like #{teams} and userId=#{userId} )tom")
+    List<SubmitWorkLoadMapper>list(String teams,String userId);
+}

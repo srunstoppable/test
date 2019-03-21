@@ -1,0 +1,29 @@
+package com.experiment.Utils;
+
+import com.experiment.pojo.User;
+
+
+/*
+    控制当前用户信息
+ */
+import java.io.Serializable;
+
+public class UserContext implements Serializable {
+    private static ThreadLocal<User> loginEntityThreadLocal=new ThreadLocal<>();
+
+    public static User getUserSession() {
+        return loginEntityThreadLocal.get();
+    }
+
+    public static void setUserSession(User entity) {
+        loginEntityThreadLocal.set(entity);
+    }
+
+    public static void removeUserSession() {
+        loginEntityThreadLocal.remove();
+    }
+
+
+
+
+}

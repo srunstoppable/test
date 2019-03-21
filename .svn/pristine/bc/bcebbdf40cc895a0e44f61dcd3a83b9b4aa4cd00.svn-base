@@ -1,0 +1,28 @@
+package com.experiment.serviceImp;
+
+
+import com.experiment.Utils.Result;
+import com.experiment.pojo.User;
+import com.experiment.service.UserService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImp implements UserService {
+
+
+
+    @Override
+    public Result login(User user) {
+        User u=user.selectById();
+        Result result=new Result();
+        if(u!=null){
+            result.setSuccess(true);
+            result.setObject(u);
+        }
+        else {
+            result.setSuccess(false);
+            result.setMessage("用户名或密码错误!");
+        }
+        return result;
+}
+}

@@ -1,0 +1,55 @@
+server:
+    port: 8080
+    tomcat:
+       uri-encoding: utf-8
+
+
+spring:
+#  http:
+#    encoding:
+#      charset: UTF-8
+#      force: true
+#      enabled: true
+ datasource:
+    url: jdbc:sqlserver://118.31.239.85:1433;databaseName=staff
+    username: MISUser
+    password: MISUser
+#    platform: h2
+#    initialize: true
+#    continue-on-error: true
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+ http:
+   encoding:
+     enabled: true
+     force: true
+     charset: UTF-8
+ redis:
+   host: localhost
+   port: 6379
+   jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+
+
+
+
+
+# resources:
+#   static-locations: classpath:/META-INF/resource/,classpath:/resource/,classpath:/static/,classpath:/public/,file:${web.upload-path}
+# mvc:
+#   static-path-pattern: /**
+#web:
+#  upload-path: D:/image/
+
+##image-path: E:/JAVADEV/springboot-mybatis-demo/src/main/resource/static/image
+#mybatis:
+#  type-aliases-package: cms_pojo
+
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+#  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.experiment.entity

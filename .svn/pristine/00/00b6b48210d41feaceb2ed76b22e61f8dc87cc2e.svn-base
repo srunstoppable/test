@@ -1,0 +1,20 @@
+package com.experiment.service;
+
+import com.experiment.Utils.Result;
+import com.experiment.entity.Userinfo;
+import com.baomidou.mybatisplus.service.IService;
+
+/**
+ * <p>
+ *  服务类
+ * </p>
+ *
+ * @author sr
+ * @since 2018-11-21
+ */
+public interface UserinfoService extends IService<Userinfo> {
+
+    public Result login(Userinfo userinfo);
+
+
+}
